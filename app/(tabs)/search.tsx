@@ -6,12 +6,12 @@ import React, { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Pressable,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -22,6 +22,7 @@ export default function SearchScreen() {
 
   const handleSearch = () => {
     if (city.trim().length < 2) {
+      alert("City name must be at least 2 characters long.");
       Alert.alert("Error", "City name must be at least 2 characters long.");
       return;
     }
@@ -42,9 +43,9 @@ export default function SearchScreen() {
           onChangeText={setCity}
           onSubmitEditing={handleSearch}
         />
-        <TouchableOpacity onPress={handleSearch}>
+        <Pressable onPress={handleSearch}>
           <SearchIcon size={24} color="#3b82f6" />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     alignItems: "center",
   },
-  input: { flex: 1, fontSize: 16, marginLeft: 10 },
+  input: { flex: 1, fontSize: 16, marginLeft: 10, outline: "none" },
   scrollContainer: { paddingHorizontal: 20, paddingBottom: 40 },
   errorText: { color: "red", textAlign: "center", marginTop: 20 },
 });

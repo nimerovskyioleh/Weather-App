@@ -4,6 +4,7 @@ import { Info, LogOut, ShieldCheck, Star } from "lucide-react-native";
 import React from "react";
 import {
   Alert,
+  Platform,
   Share,
   StyleSheet,
   Text,
@@ -17,21 +18,33 @@ export default function SettingsScreen() {
   const user = auth.currentUser;
 
   const handleLogout = () => {
-    Alert.alert("Logout", "Are you sure you want to log out?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Logout",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await signOut(auth);
-            router.replace("/login");
-          } catch (error) {
-            Alert.alert("Error", "Failed to log out");
-          }
+    const performLogout = async () => {
+      try {
+        await signOut(auth);
+        router.replace("/login");
+      } catch (error) {
+        if (Platform.OS === "web") {
+          alert("Failed to log out");
+        } else {
+          Alert.alert("Error", "Failed to log out");
+        }
+      }
+    };
+
+    if (Platform.OS === "web") {
+      if (window.confirm("Are you sure you want to log out?")) {
+        performLogout();
+      }
+    } else {
+      Alert.alert("Logout", "Are you sure you want to log out?", [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Logout",
+          style: "destructive",
+          onPress: performLogout,
         },
-      },
-    ]);
+      ]);
+    }
   };
 
   const onShare = async () => {
